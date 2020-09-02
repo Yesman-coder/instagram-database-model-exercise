@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -11,26 +11,33 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
     user_name = Column(String, primary_key=True)
-    name = Column(String(250))
-    last_name = Column(String(250))
+    name = Column(String(80))
+    last_name = Column(String(80))
     email = Column(String(250), nullable=False)
     password = Column(String(250))
     profile_pic = Column(String(250))
     followers = Column(Integer())
     followed = Column(Integer())
     notifications = Column(Integer())
-    posts = relationship("Post", backref="author")
-    inbox = relationship("Inbox", backref="author")
+    posts = relationship("Post", backref="user")
+    inbox = relationship("Inbox")
+
+    # def like() 
+    # def comment()
+    # def save()
+    # def follow_unfollow()
 
 class Post(Base):
     __tablename__= 'post'
     post_id = Column(Integer, primary_key=True)
     user_name = Column(String, ForeignKey('users.user_name'), nullable=False)
+    user = User
     content = Column(String(250))
     date = Column(DateTime())
     likes = Column(Integer())
     comments = Column(String(250))
-    saved = Column()
+    saved = Column(Boolean())
+
 
 class Saved(Base):
     __tablename__ = 'saved'
